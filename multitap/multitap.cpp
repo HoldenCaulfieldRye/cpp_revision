@@ -15,8 +15,7 @@ int encode_character(char ch, char multitap[500]) {
   }
 
   while(multitap[0] != ch)
-    file.getline(multitap, 500);  //this works
-
+    file.getline(multitap, 500);//this works
   file.getline(multitap, 500);
 
   if (file.eof()) {
@@ -24,21 +23,46 @@ int encode_character(char ch, char multitap[500]) {
     return -1;
   }
   
-  cerr << "looking at: ";
-  for (int i=0; i<7; i++)
-    cerr << multitap[i] << " ";
-  cerr << endl;
-
+  int i;
+  for (i=1; i<500 && multitap[i] == multitap[i-1]; i++);
+  return i;
 
   //  getline(file, multitap); //doesn't work
   //  file.getline(line);      //doesn't work
   //  file.getline(multitap);  //doesn't work
   //  cin.getline(multitap);   //doesn't work
-
-  return 0;
 }
 
 
 void encode(char plaintext[100], char multitap[500]) {
+  bool hash = false;
+  char ch, interim[5];
+  int length, count = 0;
+
+  encodethat(plaintext, multitap, 0, 100);
+
+  for(length = encode_character(plaintext[j], interim);
+      length != -1;
+      length = encode_character(plaintext[j], interim)) {
+
+    for (int i=0; i<length; i++)
+multitap[count+i] = 
+  }
+  for (int i=0; i<500 && ; i++)
+  /*test whether character is capital letter*/
+  if (!islower(plaintext[count]) && isalpha(plaintext[count])) {
+    hash = true;
+
+  }
+}
+
+encodethat(char plaintext[100], char multitap[500], int beg, int end) {
+  char ch;
+
+  if (encode_character(ch, multitap) != -1) {
+
+    encodethat(plaintext, multitap, i, end);
+  }
+
 
 }

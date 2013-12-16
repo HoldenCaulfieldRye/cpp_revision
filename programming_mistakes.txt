@@ -62,19 +62,35 @@ Streams:
   e.g. void print(int amount, ofstream file);
   instead of void print(int amount, ofstream& file);
 - forgetting that get() deletes the character from the file, or that seek() does not move on to the next character, or that putback(..) requires a char argument
-- peek() and get() with no arg are of type int, need to add "(char) peek()" etc to get char
-- istream.getline(char[], int size), 
-  istream.getline(char[], int size, char delim),  
-  //makes sense that you need to specify size, char[] is only a
-  //pointer, and because this isn't a string, there is no sentinel from
-  //which to infer size!
-  getline(istream&, string),
+- peek() and get() with no arg are of type int, need to add "(char)
+peek()" etc to get char
+
+
+getline
+- istream.getline(char*, int size), 
+  istream.getline(char*, int size, char delim),  
+  //makes sense that you need to specify size, cstrings have no
+  //sentinel from which to infer size!
+
+- getline(istream&, string),
   getline(istream&, string, char delim),
-- using strcmp() is difficult because it wants const char*, and you might be handling string, or char* or wtv. as a test, try to use strcmp() in get_symbole_foretc.
+  //both versions of getline return istream&, which can be used for
+  //chaining, but stackoverflow disrecommends, so treat as void
+
+
+- using strcmp() is difficult because it wants const char*, and you might be handling string, or char* or wtv. as a test, try to use strcmp() in get_symbol_foretc.
   Victoria does it really well, check her code for mistakes
 
 Cstrings & Arrays:
-- not making efficient use of <cstring> library, which includes get_line(..), strcmp(..), strcpy(..)
+- not making efficient use of <cstring> library, which includes
+getline(..), strcmp(..)
+
+
+strcpy:
+- char* strcpy(char* dest, const char* source)
+  //dest comes before source!
+  //source has to be const! makes sense, since size has to be somehow known
+
 - use string getting paradigm with const int maximum_length: search "getline" in wjk lecture 6
 - "getline(a, max_length)" instead of "cin.getline(a, max_length)"
 - write a program that deletes every repeated character from a string, but write pseudo code on paper first! this one's a killer
