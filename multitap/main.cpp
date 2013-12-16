@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#inlude"multitap.h"
+
 int main() {
 
   char plaintext[100], multitap[500];
@@ -22,4 +24,6 @@ int main() {
   plaintext = "It'll take you, like, 20 minutes only! Seriously?";
   multitap = encode(plaintext, multitap);
   cout << "'" << plaintext << "' in multitap format is " << multitap << endl;
+
+  return 0;
 }

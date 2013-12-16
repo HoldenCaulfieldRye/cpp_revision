@@ -63,7 +63,13 @@ Streams:
   instead of void print(int amount, ofstream& file);
 - forgetting that get() deletes the character from the file, or that seek() does not move on to the next character, or that putback(..) requires a char argument
 - peek() and get() with no arg are of type int, need to add "(char) peek()" etc to get char
-- getline() is so useful, use it when input is organised in lines, eg with for get_symbol_for_station_or_line()
+- istream.getline(char[], int size), 
+  istream.getline(char[], int size, char delim),  
+  //makes sense that you need to specify size, char[] is only a
+  //pointer, and because this isn't a string, there is no sentinel from
+  //which to infer size!
+  getline(istream&, string),
+  getline(istream&, string, char delim),
 - using strcmp() is difficult because it wants const char*, and you might be handling string, or char* or wtv. as a test, try to use strcmp() in get_symbole_foretc.
   Victoria does it really well, check her code for mistakes
 
