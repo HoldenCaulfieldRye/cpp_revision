@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstring>
 
 using namespace std;
 
@@ -6,12 +7,11 @@ using namespace std;
 
 int main() {
 
-  //  char plaintext[100];
   char multitap[500];
   // char ch;
 
 
-  //====== QUESTION 1 ===============================================
+  cout << "====== QUESTION 1 ===============================================" << endl << endl;
 
   encode_character('a', multitap);
   cout << "'a' is encoded as " << multitap << endl;
@@ -32,26 +32,19 @@ int main() {
   cout << "',' is encoded as " << multitap << endl;
 
 
-  //====== QUESTION 2 ===============================================
+  cout << endl << "====== QUESTION 2 ===============================================" << endl << endl;
 
-  strcpy(plaintext, "hello there");
-  multitap = encode(plaintext, multitap);
-  cout << "'" << plaintext << "' in multitap format is " << multitap << endl;
+  encode("hello there", multitap);
+  cout << "'hello there' in multitap format is " << multitap << endl;
 
-  // strcpy(plaintext, "Hello Everyone How Are We Today?");
-  // plaintext = "Hello Everyone How Are We Today?";
-  // multitap = encode(plaintext, multitap);
-  // cout << "'" << plaintext << "' in multitap format is " << multitap << endl;
+  // encode(plaintext, multitap);
+  // cout << "'Hello Everyone How Are We Today?' in multitap format is " << multitap << endl;
 
-  // strcpy(plaintext, "I am 22 Years Old.");
-  // plaintext = "I am 22 Years Old.";
-  // multitap = encode(plaintext, multitap);
-  // cout << "'" << plaintext << "' in multitap format is " << multitap << endl;
+  // encode("I am 22 Years Old.", multitap);
+  // cout << "'I am 22 Years Old.' in multitap format is " << multitap << endl;
 
-  // strcpy(plaintext, "It'll take you, like, 20 minutes only! Seriously?");
-  // plaintext = "It'll take you, like, 20 minutes only! Seriously?";
-  // multitap = encode(plaintext, multitap);
-  // cout << "'" << plaintext << "' in multitap format is " << multitap << endl;
+  // encode("It'll take you, like, 20 minutes only! Seriously?", multitap);
+  // cout << "'It'll take you, like, 20 minutes only! Seriously?' in multitap format is " << multitap << endl;
 
   return 0;
 }

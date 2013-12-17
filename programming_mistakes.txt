@@ -66,8 +66,6 @@ Streams:
 peek()" etc to get char
 
 
-
-
 - getline(istream&, string),
   getline(istream&, string, char delim),
   //both versions of getline return istream&, which can be used for
@@ -77,19 +75,26 @@ peek()" etc to get char
 - using strcmp() is difficult because it wants const char*, and you might be handling string, or char* or wtv. as a test, try to use strcmp() in get_symbol_foretc.
   Victoria does it really well, check her code for mistakes
 
+
 Cstrings & Arrays:
 - never have charray[n] as argument unless size fixed; use char *charray instead!
 - an empty char[]'s contents contain random garbage
 - not making efficient use of <cstring> library, which includes
 getline(..), strcmp(..)
+- const char* always has a sentinel character!
+- to clear: charray[0]='\0';
+
 
 strcpy:
 - char* strcpy(char* dest, const char* source)
   //dest comes before source!
   //source has to be const! makes sense, since size has to be somehow known
+  //adds sentinel character to dest!
+  //dest is returned
 
 - find "getline" in wjk lecture 6 and read
 - write a program that deletes every repeated character from a string, but write pseudo code on paper first! this one's a killer
+
 
 getline
 - istream.getline(char*, int size), 
@@ -97,9 +102,12 @@ getline
   //makes sense that you need to specify size, cstrings have no
   //sentinel from which to infer size!
 
+
 strcat
 - char* strcat(char* dest, char* source)
+  //dest is given sentinel character because const char* always have sentinel character!
   //dest is returned
+  
 
 strtok:
 ...

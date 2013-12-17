@@ -36,35 +36,49 @@ int encode_character(char ch, char* multitap) {
 }
 
 
-void encode(char* plaintext, char* multitap) {
-  // bool hash = false;
-  //  char ch;
-  char interim[5];
+void encode(const char* plaintext, char* multitap) {
+  bool hash = false;
+  char ch;
+  char* interim;
+  multitap[0] = interim[0] = '\0';
   // int length;
 // int count = 0, j=0;
 
   // encodethat(plaintext, multitap, 0, 100);
 
-  for (int i=0; i<100; i++) {
-    encode_character(plaintext[i], interim);
-    strcat(multitap, interim);
-    strcat(multitap, '|');
+  cerr << "encoding '" << plaintext << "' into multitap which should be empty: " << multitap << endl;
+
+  for (int i=0; plaintext[i+1]!='\0'; i++, ch=plaintext[i]) {
+
+    encode_character(ch, interim);
+
+    if (ch==' ' || islower(ch) || isdigit(ch)) {
+      cerr << "encoding " << ch << " as " << interim << endl;
+      cerr << "strcat-ing it to " << multitap << endl;
+
+      if(hash==true) {
+	strcat(multitap, "#");
+	hash = false;
+      }
+    }
+
+    else if (isalpha(ch) && hash==false) { //capital letter
+	strcat(multitap, "#");
+	hash = true;
+    }
+
+      strcat(multitap, interim);
+    cerr << "strcat-ing '|' to " << multitap << endl;
+
+    strcat(multitap, "|");
+
+    cerr << "multitap now looks like " << multitap << endl << endl;
   }
+  /*last char to encode needs no '|'*/
+    encode_character(ch, interim);
+    strcat(multitap, interim);
+    strcat(multitap, "'\0'");
 
-  // for(length = encode_character(plaintext[j], interim);
-  //     length != -1;
-  //     length = encode_character(plaintext[j], interim)) {
-
-  //   // for (int i=0; i<length; i++)
-  //   //   multitap[count+i] = 
-  //   // 	}
-  //   for (int i=0; i<500 && ; i++);
-  //   /*test whether character is capital letter*/
-  //   if (!islower(plaintext[count]) && isalpha(plaintext[count])) {
-  //     hash = true;
-
-  //   }
-  // }
 }
 
 void encodethat(char* plaintext, char* multitap, int beg, int end) {

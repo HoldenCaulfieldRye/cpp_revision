@@ -1,3 +1,6 @@
+Cstring:
+  to clear: charray[0] = '\0';
+
 getline:
   #include<istream> or #include<fstream>
     istream.getline(char*, int size)
@@ -7,7 +10,8 @@ getline:
 
 strcpy:
   #include<cstring>
-    char* strcpy(char* dest, char* source)
+    char* strcpy(char* dest, const char* source)
+    //adds sentinel character to dest!
 
 strcat:
   #include<cstring>
