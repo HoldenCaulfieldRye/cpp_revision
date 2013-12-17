@@ -40,11 +40,11 @@ int main() {
   encode("Meet Anna at 5pm", multitap);
   cout << "'Meet Anna at 5pm' in multitap format is " << multitap << endl << endl;
 
-  // encode("I am 22 Years Old.", multitap);
-  // cout << "'I am 22 Years Old.' in multitap format is " << multitap << endl << endl;
+  encode("I am 22 Years Old.", multitap);
+  cout << "'I am 22 Years Old.' in multitap format is " << multitap << endl << endl;
 
-  // encode("It'll take you, like, 20 minutes only! Seriously?", multitap);
-  // cout << "'It'll take you, like, 20 minutes only! Seriously?' in multitap format is " << multitap << endl << endl;
+  encode("It will take you, like, 20 minutes only! Seriously?", multitap);
+  cout << "'It will take you, like, 20 minutes only! Seriously?' in multitap format is " << multitap << endl << endl;
 
   // cout << endl << "how does program cope with invalid input?" << endl << endl; 
   // encode("experiencing 250% month-on-month growth man!", multitap);
