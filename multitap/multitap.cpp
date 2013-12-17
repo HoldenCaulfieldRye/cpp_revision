@@ -72,6 +72,9 @@ void encode(const char* plaintext, char* multitap) {
 
   /*first step: encode first character*/
   length = check_hash(plaintext[0], interim[0], hash);
+
+  if (length == -1) {
+    cerr << "invalid input:"
   //   cerr << "strcat-ing " << interim[0] << " to " << multitap << endl;
   strcat(multitap, interim[0]);
   // cerr << "multitap is now: " << multitap << endl;
