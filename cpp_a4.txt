@@ -6,5 +6,9 @@ getline:
     istream& getline(istream&, string, char delim)
 
 strcpy:
-  #include<iostream>
+  #include<cstring>
     char* strcpy(char* dest, char* source)
+
+strcat:
+  #include<cstring>
+    char* strcat(char* dest, char* source)

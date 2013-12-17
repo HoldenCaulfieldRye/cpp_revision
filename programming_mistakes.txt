@@ -53,7 +53,7 @@ General:
 
 
 Streams:
-- forgetting out.close();
+- forgetting file.close();
 - add content to an ifstream with putback(), not put()
 - cout << in.get();
   instead of 
@@ -66,11 +66,7 @@ Streams:
 peek()" etc to get char
 
 
-getline
-- istream.getline(char*, int size), 
-  istream.getline(char*, int size, char delim),  
-  //makes sense that you need to specify size, cstrings have no
-  //sentinel from which to infer size!
+
 
 - getline(istream&, string),
   getline(istream&, string, char delim),
@@ -82,26 +78,39 @@ getline
   Victoria does it really well, check her code for mistakes
 
 Cstrings & Arrays:
+- never have charray[n] as argument unless size fixed; use char *charray instead!
+- an empty char[]'s contents contain random garbage
 - not making efficient use of <cstring> library, which includes
 getline(..), strcmp(..)
-
 
 strcpy:
 - char* strcpy(char* dest, const char* source)
   //dest comes before source!
   //source has to be const! makes sense, since size has to be somehow known
 
-- use string getting paradigm with const int maximum_length: search "getline" in wjk lecture 6
-- "getline(a, max_length)" instead of "cin.getline(a, max_length)"
+- find "getline" in wjk lecture 6 and read
 - write a program that deletes every repeated character from a string, but write pseudo code on paper first! this one's a killer
-- strtok function v useful
-- cannnot assign an array to another. strcpy() is available for char arrays. but also quite cool is memcpoy(), useful for all inc int arrays, but you need to specify
-  size to copy, which can be a pain.
+
+getline
+- istream.getline(char*, int size), 
+  istream.getline(char*, int size, char delim),  
+  //makes sense that you need to specify size, cstrings have no
+  //sentinel from which to infer size!
+
+strcat
+- char* strcat(char* dest, char* source)
+  //dest is returned
+
+strtok:
+...
+
+- cannnot assign an array to another. strcpy() is available for char
+- arrays. but also quite cool is memcpy(), useful for all inc int arrays, but you need to specify size to copy, which can be a pain.
 - automatic deprecation of char* to const char* when assigning "blabla" directly - see Git/Scratch/string.cpp for fiddles
 - we can assign "blabla" to char* or to const char*, but we cannot assign a string variable to them!! yeah that's weird
 - we can assign NULL or \0 to char* or const char*
 - NULL and \0 have the same binary code as zero, and since zero is an 'important' value for an int array, it doesn't serve as a sentinal in int arrays
-- if char* a has a sentinel character, we can print it out simply with cout << a, whereas with an int* b, it will print out &b[0]
+- we can print out a whole cstring simply with cout << charray, whereas with an int* b, it will print out &b[0]
 - to initialise an array with multiple values, the array size has to be given, eg
   int array[6] = {0,1,2,3,4,5}
   //and not int array = {0,1,2,3,4,5}

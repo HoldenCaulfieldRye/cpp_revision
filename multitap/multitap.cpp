@@ -1,11 +1,13 @@
 #include<fstream>
 #include<cctype>
 #include<iostream>
-#include<string>
+#include<cstring>
 
 using namespace std;
 
-int encode_character(char ch, char multitap[500]) {
+#include"multitap.h"
+
+int encode_character(char ch, char* multitap) {
   ifstream file;
 
   file.open("multitap.txt");
@@ -34,35 +36,44 @@ int encode_character(char ch, char multitap[500]) {
 }
 
 
-void encode(char plaintext[100], char multitap[500]) {
-  bool hash = false;
-  char ch, interim[5];
-  int length, count = 0;
+void encode(char* plaintext, char* multitap) {
+  // bool hash = false;
+  //  char ch;
+  char interim[5];
+  // int length;
+// int count = 0, j=0;
 
-  encodethat(plaintext, multitap, 0, 100);
+  // encodethat(plaintext, multitap, 0, 100);
 
-  for(length = encode_character(plaintext[j], interim);
-      length != -1;
-      length = encode_character(plaintext[j], interim)) {
-
-    for (int i=0; i<length; i++)
-multitap[count+i] = 
+  for (int i=0; i<100; i++) {
+    encode_character(plaintext[i], interim);
+    strcat(multitap, interim);
+    strcat(multitap, '|');
   }
-  for (int i=0; i<500 && ; i++)
-  /*test whether character is capital letter*/
-  if (!islower(plaintext[count]) && isalpha(plaintext[count])) {
-    hash = true;
 
-  }
+  // for(length = encode_character(plaintext[j], interim);
+  //     length != -1;
+  //     length = encode_character(plaintext[j], interim)) {
+
+  //   // for (int i=0; i<length; i++)
+  //   //   multitap[count+i] = 
+  //   // 	}
+  //   for (int i=0; i<500 && ; i++);
+  //   /*test whether character is capital letter*/
+  //   if (!islower(plaintext[count]) && isalpha(plaintext[count])) {
+  //     hash = true;
+
+  //   }
+  // }
 }
 
-encodethat(char plaintext[100], char multitap[500], int beg, int end) {
-  char ch;
+void encodethat(char* plaintext, char* multitap, int beg, int end) {
+  // char ch;
 
-  if (encode_character(ch, multitap) != -1) {
+  // if (encode_character(ch, multitap) != -1) {
 
-    encodethat(plaintext, multitap, i, end);
-  }
+  //   encodethat(plaintext, multitap, i, end);
+  // }
 
 
 }
