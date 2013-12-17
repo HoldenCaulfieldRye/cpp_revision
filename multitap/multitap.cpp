@@ -25,68 +25,82 @@ int encode_character(char ch, char* multitap) {
     return -1;
   }
   
+  //cerr << "encoding " << ch << " as " << multitap << endl; 
+
   int i;
   for (i=1; i<500 && multitap[i] == multitap[i-1]; i++);
   return i;
+}
 
-  //  getline(file, multitap); //doesn't work
-  //  file.getline(line);      //doesn't work
-  //  file.getline(multitap);  //doesn't work
-  //  cin.getline(multitap);   //doesn't work
+
+int check_hash(char ch, char* interim, bool& hash) {
+  char temp[4];
+  interim[0] = temp[0] = '\0';
+  int length;
+
+  length = encode_character(ch, temp);
+  // cerr << "(check_hash) interim should be empty: " << interim << endl;
+
+  if ((hash==false && isupper(ch)) || (hash==true && !isupper(ch))) {
+    interim[0] = '#';
+    length++;
+    hash = !hash;
+  }
+
+  // cerr << "(check_hash) interim should be roughly empty: " << interim << " and temp should contain encoding for " << ch << ": " << temp << endl;
+  strcat(interim, temp);
+
+  // cerr << "(check_hash) after strcat(interim, temp), temp looks like " << temp << " and interim looks like " << interim << endl;
+
+  return length;
 }
 
 
 void encode(const char* plaintext, char* multitap) {
   bool hash = false;
   char ch;
-  char* interim[2];
+  char interim[2][5];
   multitap[0] = interim[0][0] = interim[1][0] = '\0';
-  int length[2];
-  // int count = 0, j=0;
-  // encodethat(plaintext, multitap, 0, 100);
+
+  int length, templength;
 
   cerr << "encoding '" << plaintext << "' into multitap which should be empty: " << multitap << endl;
 
-  length[0] = check_hash(plaintext[0], interim[0], hash);
+  /*first step: encode first character*/
+  length = check_hash(plaintext[0], interim[0], hash);
+  //  cerr << "strcat-ing " << interim[0] << " to " << multitap << endl;
   strcat(multitap, interim[0]);
+  //  cerr << "multitap now looks like " << multitap << endl;
   ch=plaintext[1];
 
-  for (int i=1; plaintext[/**/]!='\0'; i++, ch=plaintext[i]) {
+  /*inductive step: while there is another character to encode, encode it by checking for whether '|' is needed by comparing its multitap encoding with that of previous character*/
+  for (int i=1; plaintext[i]!='\0'; i++, ch=plaintext[i]) {
 
-    length[1] = check_hash(ch, interim[1], hash);
+    /*get encoding for current character, and take its length - useful if there is another loop after this one*/
+    templength = check_hash(ch, interim[1], hash);
 
+    /*compare first multitap key of encoding for current character with last multitap key of encoding for previous character. if same, append '|' to multitap*/
     if (interim[0][length-1] == interim[1][0]) {
-      cerr << "did I get length-1 right? " << interim[0] << " and " << interim[0][length-1] << endl;
+      // cerr << "did I get length-1 right? " << interim[1][0] << " and " << interim[0][length-1] << endl;
+      // cerr << "strcat-ing '|' to " << multitap << endl;
       strcat(multitap, "|");
+      //cerr << "multitap now looks like " << multitap << endl;
     }
 
+    /*append encoding for current character*/
+    //cerr << "strcat-ing " << interim[1] << " to " << multitap << endl;
     strcat(multitap, interim[1]);
+    //cerr << "multitap now looks like " << multitap << endl << endl;
 
+    /*update interim[0] and length in case there is a next loop*/
     strcpy(interim[0], interim[1]);
-    length[0] = length[1];
+    length = templength;
   }
-  /*last char to encode needs no '|'*/
-  encode_character(ch, interim);
-  strcat(multitap, interim);
+
+  /*multitap is complete, just needs a sentinel character*/
   strcat(multitap, "'\0'");
-
 }
 
-void check_hash(char ch, char* interim, bool& hash) {
-  char* temp;
-
-  temp[0] = interim[0] = '\0';
-  encode_character(ch, temp);
-
-  if ( (hash==false && isupper(ch)) || (hash==true && !isupper(ch)) ) {
-      interim[0] = '#';
-      hash = !hash;
-  }
-
-  strcat(interim, temp);
-  // cerr << "strcat-ing '|' to " << multitap << endl;
-  // cerr << "multitap now looks like " << multitap << endl << endl;
-}
 
 
 bool isupper(char ch) {

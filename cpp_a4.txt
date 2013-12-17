@@ -1,5 +1,6 @@
 Cstring:
   to clear: charray[0] = '\0';
+  const char* always has a sentinel character
 
 getline:
   #include<istream> or #include<fstream>

@@ -83,6 +83,8 @@ Cstrings & Arrays:
 getline(..), strcmp(..)
 - const char* always has a sentinel character!
 - to clear: charray[0]='\0';
+- don't assign a charray to another if you simply want copied contents and not pointing to same thing!!
+  use strcpy
 
 
 strcpy:
@@ -91,6 +93,7 @@ strcpy:
   //source has to be const! makes sense, since size has to be somehow known
   //adds sentinel character to dest!
   //dest is returned
+- always use instead of assigning charray to another, as this will point to same object
 
 - find "getline" in wjk lecture 6 and read
 - write a program that deletes every repeated character from a string, but write pseudo code on paper first! this one's a killer
