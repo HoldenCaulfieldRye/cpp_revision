@@ -39,55 +39,58 @@ int encode_character(char ch, char* multitap) {
 void encode(const char* plaintext, char* multitap) {
   bool hash = false;
   char ch;
-  char* interim;
-  multitap[0] = interim[0] = '\0';
-  // int length;
-// int count = 0, j=0;
-
+  char* interim[2];
+  multitap[0] = interim[0][0] = interim[1][0] = '\0';
+  int length[2];
+  // int count = 0, j=0;
   // encodethat(plaintext, multitap, 0, 100);
 
   cerr << "encoding '" << plaintext << "' into multitap which should be empty: " << multitap << endl;
 
-  for (int i=0; plaintext[i+1]!='\0'; i++, ch=plaintext[i]) {
+  length[0] = check_hash(plaintext[0], interim[0], hash);
+  strcat(multitap, interim[0]);
+  ch=plaintext[1];
 
-    encode_character(ch, interim);
+  for (int i=1; plaintext[/**/]!='\0'; i++, ch=plaintext[i]) {
 
-    if (ch==' ' || islower(ch) || isdigit(ch)) {
-      cerr << "encoding " << ch << " as " << interim << endl;
-      cerr << "strcat-ing it to " << multitap << endl;
+    length[1] = check_hash(ch, interim[1], hash);
 
-      if(hash==true) {
-	strcat(multitap, "#");
-	hash = false;
-      }
+    if (interim[0][length-1] == interim[1][0]) {
+      cerr << "did I get length-1 right? " << interim[0] << " and " << interim[0][length-1] << endl;
+      strcat(multitap, "|");
     }
 
-    else if (isalpha(ch) && hash==false) { //capital letter
-	strcat(multitap, "#");
-	hash = true;
-    }
+    strcat(multitap, interim[1]);
 
-      strcat(multitap, interim);
-    cerr << "strcat-ing '|' to " << multitap << endl;
-
-    strcat(multitap, "|");
-
-    cerr << "multitap now looks like " << multitap << endl << endl;
+    strcpy(interim[0], interim[1]);
+    length[0] = length[1];
   }
   /*last char to encode needs no '|'*/
-    encode_character(ch, interim);
-    strcat(multitap, interim);
-    strcat(multitap, "'\0'");
+  encode_character(ch, interim);
+  strcat(multitap, interim);
+  strcat(multitap, "'\0'");
 
 }
 
-void encodethat(char* plaintext, char* multitap, int beg, int end) {
-  // char ch;
+void check_hash(char ch, char* interim, bool& hash) {
+  char* temp;
 
-  // if (encode_character(ch, multitap) != -1) {
+  temp[0] = interim[0] = '\0';
+  encode_character(ch, temp);
 
-  //   encodethat(plaintext, multitap, i, end);
-  // }
+  if ( (hash==false && isupper(ch)) || (hash==true && !isupper(ch)) ) {
+      interim[0] = '#';
+      hash = !hash;
+  }
+
+  strcat(interim, temp);
+  // cerr << "strcat-ing '|' to " << multitap << endl;
+  // cerr << "multitap now looks like " << multitap << endl << endl;
+}
 
 
+bool isupper(char ch) {
+  if (isalpha(ch) && !islower(ch))
+    return true;
+  return false;
 }
