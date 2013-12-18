@@ -27,8 +27,8 @@ char get_symbol_for_station_or_line(const char* name);
 
 Direction* get_directions(char* route);
 
-bool one_move(Direction* directions, int& r, int& c, char& next);
+bool one_move(Direction direction, int& r, int& c, char& next);
 
-char get_name_for_station(char target);
+char* get_name_for_station(char target);
 
 int validate_route(char** map, int height, int width, const char* name, char* route, char* destination);

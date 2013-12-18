@@ -201,48 +201,50 @@ Direction* get_directions(char* route) {
 }
 
 
-bool one_move(Direction* directions, int& r, int& c, char& symb) {
-  switch(direction[i]) {
+bool one_move(char** map, Direction direction, int& r, int& c, char& symb) {
+  switch(direction) {
   case N:
     r-- ;
-    break;
+    return true;
   case S:
     r++ ;
-    break;
+    return true;
   case W:
     c-- ;
-    break;
+    return true;
   case E:
     c++ ;
-    break;
+    return true;
   case NE:
     r-- ;
     c++ ;
-    break;
+    return true;
   case NW:
     r-- ;
     c-- ;
-    break;
+    return true;
   case SE:
     r++ ;
     c++ ;
-    break;
+    return true;
   case SW:
     r++ ;
     c-- ;
-    break;
-  case END:
     return true;
-  case INVALID_DIRECTION:
-    return false;
+  case END: {
+  symb = map[r][c];
+    return true;
   }
-  get_symbol_position(map, height, width, next, r, c);
+  case INVALID_DIRECTION:
+    break;
+  }
+  return false;
 }
 
-char get_name_for_station(char target) {
+char* get_name_for_station(char target) {
   ifstream file;
   char line[30]; 
-  char* candidate;
+  char *candidate;
   line[0] = '\0';
 
   file.open("stations.txt");
@@ -264,25 +266,25 @@ char get_name_for_station(char target) {
 
 
 int validate_route(char** map, int height, int width, const char* start, char* route, char* dest) {
-  char prev, current, next, destSymb;
+  char prev, current, next;
   Direction *directions;
   int r_prev, c_prev, r_cur, c_cur, r_next, c_next, line_changes=0;
 
   /*get Direction vector*/
   directions = get_directions(route);
 
-
   /*get symbol and coordinates for start*/
-  startSymb = get_symbol_for_station_or_line(start);
-  if (!isalnum(startSymb))
+  current = get_symbol_for_station_or_line(start);
+  if (!isalnum(current))
     return -1; //start station invalid (if line, still invalid)
   get_symbol_position(map, height, width, current, r_cur, c_cur);
 
 
   /*navigate from start to finish with Direction array*/
+  cerr << "(for beg) hope no segfault here!" << endl;
   for (int i=0; directions[i]!=END; i++) {
 
-    if(!one_move(directions, r_next, c_next, next))
+    if(!one_move(map, directions[i], r_next, c_next, next))
       return -5;         //invalid direction
 
     if (next==' ')
@@ -307,13 +309,17 @@ int validate_route(char** map, int height, int width, const char* start, char* r
     current = next;
     c_cur = c_next;
     r_cur = r_next;
+
+  cerr << "(for loop) hope no segfault here!" << endl;
   }
 
 
   /*evaluate destination*/
-  dest = get_name_for_station(current);
-  if (!isalnum(dest))
+  if (!isalnum(current))
     return -2; //route endpoint not a station
+  dest = get_name_for_station(current);
+
+  cerr << "check that dest has sentinel (else segfault): " << dest << endl;
 
   return line_changes;
 }
