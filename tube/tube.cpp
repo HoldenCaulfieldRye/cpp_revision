@@ -146,32 +146,34 @@ bool get_symbol_position(char **map, int height, int width, char target, int& r,
 /*given the input parameter name describing the name of a station or line, returns the corresponding map symbol character*/
 char get_symbol_for_station_or_line(const char* name) {
   ifstream file;
-  char line[30], candidate[28];
+  char line[30]; 
+  const char fname[2][14] = {"stations.txt","lines.txt"};
+  char* candidate;
   line[0] = '\0';
 
-  for (int i=0, file.open("stations.txt"); 
-       i<2; 
-       i++, file.close(), file.open("lines.txt")) {
-
-    for (file.getline(line, 30); !file.eof(); file.getline(line, 30)) {
-      //getline(file, line, 30);
-      file.getline(line, 30);
+  int i=0;
+  for(file.open(fname[i]); i<2; file.open(fname[i])) {
+    for (file.getline(line, 30); !file.fail(); file.getline(line, 30)) {
       candidate = &line[2];
 
-      cerr << "considering candidate: " << candidate << endl;
+      // cerr << "considering candidate: ";
+      // cerr << candidate << endl;
 
-      if (strcmp(candidate, name)) {
+      if (strcmp(candidate, name)==0) {
 	file.close();
 	return line[0];
       }
     }
+    file.close();
+    i++;
   }
 
-  file.close();
   return ' ';
 }
 
 
 int validate_route(char** map, int height, int width, const char* name, char* route, char* destination) {
+
+
   return 0;
 }
