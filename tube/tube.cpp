@@ -172,9 +172,8 @@ char get_symbol_for_station_or_line(const char* name) {
   return ' ';
 }
 
-Direction* get_directions(char* route) {
+void get_directions(Direction* directions, char* route) {
   char dir[2];
-  Direction *directions;
   int i = 0, nb_dir = 0;
 
   for(int k=i; route[i]!='\0'; k=0) {
@@ -191,101 +190,133 @@ Direction* get_directions(char* route) {
       i++;
     }
 
+    /*skip the comma*/
+    if (route[i]==',')
+      i++;
+
     /*set sentinel*/
     dir[k] = '\0';
     nb_dir++;
+    //cerr << "(get_directions) hope no segfault here!" << endl;
     directions[nb_dir-1] = string_to_direction(dir);
   }
-  directions[nb_dir-1] = END;
-  return directions;
+  directions[nb_dir] = END;
+  //cerr << "(end of get_directions) hope no segfault here!" << endl;
 }
 
 
-bool one_move(char** map, Direction direction, int& r, int& c, char& symb) {
+bool one_move(char** map, Direction direction, int r_cur, int c_cur, int& r_next, int& c_next) {
+
+  cerr << "moving coordinates from (" << r_cur << ", " << c_cur << ") with direction " << direction << endl; 
+
   switch(direction) {
   case N:
-    r-- ;
+    r_next = r_cur - 1;
+    c_next = c_cur;
     return true;
   case S:
-    r++ ;
+    r_next = r_cur + 1;
+    c_next = c_cur;
     return true;
   case W:
-    c-- ;
+    r_next = r_cur;
+    c_next = c_cur - 1;
     return true;
   case E:
-    c++ ;
+    r_next = r_cur;
+    c_next = c_cur + 1;
     return true;
   case NE:
-    r-- ;
-    c++ ;
+    r_next = r_cur - 1;
+    c_next = c_cur + 1;
     return true;
   case NW:
-    r-- ;
-    c-- ;
+    r_next = r_cur - 1;
+    c_next = c_cur - 1;
     return true;
   case SE:
-    r++ ;
-    c++ ;
+    r_next = r_cur + 1;
+    c_next = c_cur + 1;
     return true;
   case SW:
-    r++ ;
-    c-- ;
+    r_next = r_cur + 1;
+    c_next = c_cur - 1;
     return true;
-  case END: {
-  symb = map[r][c];
+  case END:
     return true;
-  }
   case INVALID_DIRECTION:
     break;
   }
+  //cerr << "(one move) returning false!" << endl;
   return false;
 }
 
-char* get_name_for_station(char target) {
+void get_name_for_station(char target, char * name) {
   ifstream file;
-  char line[30]; 
-  char *candidate;
+  char line[30];
+  //  char* candidate;
   line[0] = '\0';
+
+  //cerr << "looking for symbol " << target << endl;
 
   file.open("stations.txt");
   for (file.getline(line, 30); !file.fail(); file.getline(line, 30)) {
-    candidate = &line[2];
+    strcpy(name, &line[2]);
 
-    // cerr << "considering candidate: ";
-    // cerr << candidate << endl;
+    // cerr << "considering name: ";
+    // cerr << line[0] << endl;
 
     if (line[0]==target) {
       file.close();
-      return candidate;
+      //cerr << "found station: " << name << endl;
+      return;
     }
   }
   file.close();
-
-  return "nowhere";
+  //cerr << "no station found" << endl;
 }
 
 
 int validate_route(char** map, int height, int width, const char* start, char* route, char* dest) {
   char prev, current, next;
-  Direction *directions;
-  int r_prev, c_prev, r_cur, c_cur, r_next, c_next, line_changes=0;
+  Direction directions[500];
+  int r_prev=0, c_prev=0, r_cur=0, c_cur=0, r_next=0, c_next=0, line_changes=0;
 
   /*get Direction vector*/
-  directions = get_directions(route);
+  get_directions(directions, route);
+
+  //cerr << "directions: ";
+  // for (int i=0; directions[i]!=END; i++)
+  //   cerr << directions[i] << ", ";
+  // cerr << endl; 
 
   /*get symbol and coordinates for start*/
   current = get_symbol_for_station_or_line(start);
+   cerr << "start station " << start << " has symbol " << current << endl;
+
   if (!isalnum(current))
     return -1; //start station invalid (if line, still invalid)
   get_symbol_position(map, height, width, current, r_cur, c_cur);
-
+     cerr << "current station has coordinates (" << r_cur << ", " << c_cur << ")"<< endl;
 
   /*navigate from start to finish with Direction array*/
-  cerr << "(for beg) hope no segfault here!" << endl;
+  //  cerr << "(for beg) hope no segfault here!" << endl;
   for (int i=0; directions[i]!=END; i++) {
 
-    if(!one_move(map, directions[i], r_next, c_next, next))
+    if(!one_move(map, directions[i], r_cur, c_cur, r_next, c_next))
       return -5;         //invalid direction
+
+    if (r_next<0 || c_next<0 || r_next>=height || c_next>=width)
+      return -7;         //out of bounds
+
+    /*not out of bounds so can safely get symbol for next*/
+    next = map[r_next][c_next];
+    //  cerr << "next point on map has coordinates (" << r_next << ", " << c_next << ")"<< endl;
+
+    //  cerr << "next point on map has symbol " << next << endl;
+
+    if (i>1 && r_prev==r_next && c_prev==c_next)
+      return -4;         //backtracking
 
     if (next==' ')
       return -6;         //off track
@@ -293,14 +324,9 @@ int validate_route(char** map, int height, int width, const char* start, char* r
     if (!isalnum(next) && !isalnum(current) && next != current)
       return -3;         //line hopping
 
-    if (i>1 && r_prev==r_next && c_prev==c_next)
-      return -4;         //backtracking
 
-    if (r_next<=0 || c_next<=0 || r_next>=height || c_next>=width)
-      return -7;         //out of bounds
-
-    if (!isalnum(next) && !isalnum(prev) && next != prev)
-      line_changes++;         //line hopping
+    if (i>2 && !isalnum(next) && !isalnum(prev) && next != prev)
+      line_changes++;
 
     //get_symbol_position(map, height, width, target, r, c);
     prev = current;
@@ -309,17 +335,17 @@ int validate_route(char** map, int height, int width, const char* start, char* r
     current = next;
     c_cur = c_next;
     r_cur = r_next;
-
-  cerr << "(for loop) hope no segfault here!" << endl;
+     cerr << "move successfully to (" << r_cur << ", " << c_cur << ", " <<current << ")" << endl << endl;
+    //  cerr << "(for loop) hope no segfault here!" << endl;
   }
 
 
   /*evaluate destination*/
   if (!isalnum(current))
     return -2; //route endpoint not a station
-  dest = get_name_for_station(current);
+  get_name_for_station(current, dest);
 
-  cerr << "check that dest has sentinel (else segfault): " << dest << endl;
+  //  cerr << "check that dest has sentinel (else segfault): " << dest << endl;
 
   return line_changes;
 }

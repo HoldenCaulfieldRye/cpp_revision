@@ -25,10 +25,10 @@ bool get_symbol_position(char **map, int height, int width, char target, int& r,
 
 char get_symbol_for_station_or_line(const char* name);
 
-Direction* get_directions(char* route);
+void get_directions(Direction *directions, char* route);
 
-bool one_move(Direction direction, int& r, int& c, char& next);
+bool one_move(Direction direction, int r_cur, int c_cur, int& r_next, int& c_next);
 
-char* get_name_for_station(char target);
+void get_name_for_station(char target, char * name);
 
 int validate_route(char** map, int height, int width, const char* name, char* route, char* destination);

@@ -79,38 +79,38 @@ int main() {
     cout << "is an invalid route (" << error_description(result) << ")" << endl;
   cout << endl;
 
-  // /* invalid route because of line hopping between stations */ 
-  // strcpy(route, "N,N,N,N,N,NE,W");
-  // cout << "Starting at London Bridge and taking the steps:" << endl;
-  // cout << route << endl;
-  // result = validate_route(map, height, width, "London Bridge", route, destination);
-  // if (result >= 0)
-  //   cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
-  // else 
-  //   cout << "is an invalid route (" << error_description(result) << ")" << endl;
-  // cout << endl;
+  /* invalid route because of line hopping between stations */ 
+  strcpy(route, "N,N,N,N,N,NE,W");
+  cout << "Starting at London Bridge and taking the steps:" << endl;
+  cout << route << endl;
+  result = validate_route(map, height, width, "London Bridge", route, destination);
+  if (result >= 0)
+    cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
+  else 
+    cout << "is an invalid route (" << error_description(result) << ")" << endl;
+  cout << endl;
 
-  // /* invalid route because of backtracking between stations */
-  // strcpy(route, "W,W,E,W,W,W");
-  // cout << "Starting at Sloane Square and taking the steps:" << endl;
-  // cout << route << endl;
-  // result = validate_route(map, height, width, "Sloane Square", route, destination);
-  // if (result >= 0)
-  //   cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
-  // else 
-  //   cout << "is an invalid route (" << error_description(result) << ")" << endl;
-  // cout << endl;
+  /* invalid route because of backtracking between stations */
+  strcpy(route, "W,W,E,W,W,W");
+  cout << "Starting at Sloane Square and taking the steps:" << endl;
+  cout << route << endl;
+  result = validate_route(map, height, width, "Sloane Square", route, destination);
+  if (result >= 0)
+    cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
+  else 
+    cout << "is an invalid route (" << error_description(result) << ")" << endl;
+  cout << endl;
 
-  // /* invalid route because route goes outside of map bounds */
-  // strcpy(route, "E,NE,SE,SE,SE");
-  // cout << "Starting at Marylebone and taking the steps:" << endl;
-  // cout << route << endl;
-  // result = validate_route(map, height, width, "Marylebone", route, destination);
-  // if (result >= 0)
-  //   cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
-  // else 
-  //   cout << "is an invalid route (" << error_description(result) << ")" << endl;
-  // cout << endl;
+  /* invalid route because route goes outside of map bounds */
+  strcpy(route, "E,NE,SE,SE,SE");
+  cout << "Starting at Marylebone and taking the steps:" << endl;
+  cout << route << endl;
+  result = validate_route(map, height, width, "Marylebone", route, destination);
+  if (result >= 0)
+    cout << "is a valid route with " << result << " line change(s) ending at " << destination << "." << endl;
+  else 
+    cout << "is an invalid route (" << error_description(result) << ")" << endl;
+  cout << endl;
 
   return 0;
 }
