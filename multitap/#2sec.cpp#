@@ -1,0 +1,10 @@
+#include<string>
+  istream& getline(istream&, string&);
+  istream& getline(istream&, string&, char delim);
+
+#include<fstream> or #include<istream>
+  istream.getline(char*, int size);
+  istream.getline(char*, int size, char delim);
+
+#include<iostream>
+  char* strcpy(char* dest, char* source);
