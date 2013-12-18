@@ -1,4 +1,4 @@
-enum Direction {N, S, W, E, NE, NW, SE, SW, INVALID_DIRECTION};
+enum Direction {N, S, W, E, NE, NW, SE, SW, END, INVALID_DIRECTION};
 
 /* error codes for Question 3 */
 #define ERROR_START_STATION_INVALID -1 
@@ -24,5 +24,11 @@ Direction string_to_direction(const char *token);
 bool get_symbol_position(char **map, int height, int width, char target, int& r, int& c);
 
 char get_symbol_for_station_or_line(const char* name);
+
+Direction* get_directions(char* route);
+
+bool one_move(Direction* directions, int& r, int& c, char& next);
+
+char get_name_for_station(char target);
 
 int validate_route(char** map, int height, int width, const char* name, char* route, char* destination);

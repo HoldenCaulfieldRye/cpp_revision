@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cctype>
 #include <cstdlib>
+#include <vector>
 
 using namespace std;
 
@@ -171,9 +172,148 @@ char get_symbol_for_station_or_line(const char* name) {
   return ' ';
 }
 
+Direction* get_directions(char* route) {
+  char dir[2];
+  Direction *directions;
+  int i = 0, nb_dir = 0;
 
-int validate_route(char** map, int height, int width, const char* name, char* route, char* destination) {
+  for(int k=i; route[i]!='\0'; k=0) {
+
+    /*set first direction char*/
+    dir[k] = route[i];
+    k++;
+    i++;
+
+    /*possibly set 2nd direction char*/
+    if (route[i]!=',') {
+      dir[k] = route[i];
+      k++;
+      i++;
+    }
+
+    /*set sentinel*/
+    dir[k] = '\0';
+    nb_dir++;
+    directions[nb_dir-1] = string_to_direction(dir);
+  }
+  directions[nb_dir-1] = END;
+  return directions;
+}
 
 
-  return 0;
+bool one_move(Direction* directions, int& r, int& c, char& symb) {
+  switch(direction[i]) {
+  case N:
+    r-- ;
+    break;
+  case S:
+    r++ ;
+    break;
+  case W:
+    c-- ;
+    break;
+  case E:
+    c++ ;
+    break;
+  case NE:
+    r-- ;
+    c++ ;
+    break;
+  case NW:
+    r-- ;
+    c-- ;
+    break;
+  case SE:
+    r++ ;
+    c++ ;
+    break;
+  case SW:
+    r++ ;
+    c-- ;
+    break;
+  case END:
+    return true;
+  case INVALID_DIRECTION:
+    return false;
+  }
+  get_symbol_position(map, height, width, next, r, c);
+}
+
+char get_name_for_station(char target) {
+  ifstream file;
+  char line[30]; 
+  char* candidate;
+  line[0] = '\0';
+
+  file.open("stations.txt");
+  for (file.getline(line, 30); !file.fail(); file.getline(line, 30)) {
+    candidate = &line[2];
+
+    // cerr << "considering candidate: ";
+    // cerr << candidate << endl;
+
+    if (line[0]==target) {
+      file.close();
+      return candidate;
+    }
+  }
+  file.close();
+
+  return "nowhere";
+}
+
+
+int validate_route(char** map, int height, int width, const char* start, char* route, char* dest) {
+  char prev, current, next, destSymb;
+  Direction *directions;
+  int r_prev, c_prev, r_cur, c_cur, r_next, c_next, line_changes=0;
+
+  /*get Direction vector*/
+  directions = get_directions(route);
+
+
+  /*get symbol and coordinates for start*/
+  startSymb = get_symbol_for_station_or_line(start);
+  if (!isalnum(startSymb))
+    return -1; //start station invalid (if line, still invalid)
+  get_symbol_position(map, height, width, current, r_cur, c_cur);
+
+
+  /*navigate from start to finish with Direction array*/
+  for (int i=0; directions[i]!=END; i++) {
+
+    if(!one_move(directions, r_next, c_next, next))
+      return -5;         //invalid direction
+
+    if (next==' ')
+      return -6;         //off track
+
+    if (!isalnum(next) && !isalnum(current) && next != current)
+      return -3;         //line hopping
+
+    if (i>1 && r_prev==r_next && c_prev==c_next)
+      return -4;         //backtracking
+
+    if (r_next<=0 || c_next<=0 || r_next>=height || c_next>=width)
+      return -7;         //out of bounds
+
+    if (!isalnum(next) && !isalnum(prev) && next != prev)
+      line_changes++;         //line hopping
+
+    //get_symbol_position(map, height, width, target, r, c);
+    prev = current;
+    c_prev = c_cur;
+    r_prev = r_cur;
+    current = next;
+    c_cur = c_next;
+    r_cur = r_next;
+  }
+
+
+  /*evaluate destination*/
+  dest = get_name_for_station(current);
+  if (!isalnum(dest))
+    return -2; //route endpoint not a station
+
+  return line_changes;
 }
