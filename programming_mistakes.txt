@@ -111,8 +111,10 @@ strcat
   //dest is given sentinel character because const char* always have sentinel character!
   //dest is returned
   
+strcmp
+- 
 
-strtok:
+strtok
 ...
 
 - cannnot assign an array to another. strcpy() is available for char
