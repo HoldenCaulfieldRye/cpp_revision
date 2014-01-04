@@ -26,6 +26,12 @@ strcmp:
     //greater value in charray1 vs charray2
     //and vice versa
 
+strncmp:
+  #include<cstring>
+    int strncmp(const char*, const char*, int n);
+    //strcmp() on first n characters of both strings
+    //C doesn't support overloading
+
 vector:
   #include<vector>
     typedef vector<Class> Vec;
