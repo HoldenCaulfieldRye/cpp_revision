@@ -51,6 +51,11 @@ string
     append_char
       void push_back(char ch);
 
+carrays:
+const char* is same as char const*
+char* const is a constant pointer to a char
+const char* const is a constant pointer to a const char
+
 
 SILLY STUFF:
 - makefile syntax (don't forget anything)
