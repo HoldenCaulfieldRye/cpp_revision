@@ -1,5 +1,3 @@
-FIND OUT WHAT DIFFERENCE BETW CONST CHAR* AND CHAR CONST* IS
-
 cstring:
   to clear: charray[0] = '\0';
   const char* always has a sentinel character
@@ -8,13 +6,17 @@ getline:
   #include<istream> or #include<fstream>
     istream.getline(char*, int size)
     istream.getline(char*, int size, char delim)
-  #include<string>
-    istream& getline(istream&, string, char delim)
+
+strtok:
+  #include<cstring>
+    char* strtok(char*, const char* delims);
+  example:
+    for(char* p=strtok(str,".,"); p!=NULL; p=strtok(NULL,".,"))
+    //look out for that null at the end
 
 strcpy:
   #include<cstring>
-    char* strcpy(char* dest, const char* source)
-    //adds sentinel character to dest!
+    char* strcpy(char* dest, const char* source);
 
 strcat:
   #include<cstring>
@@ -33,6 +35,12 @@ strncmp:
     int strncmp(const char*, const char*, int n);
     //strcmp() on first n characters of both strings
     //C doesn't support overloading
+
+strstr:
+  #include no need
+    char* strstr(char* str, const char* target);
+    const char* strstr(const char* str, const char* target);
+    //returns pointer to 1st occurrence in str1 of str2, else null pointer
 
 vector:
   #include<vector>
@@ -59,5 +67,5 @@ const char* const is a constant pointer to a const char
 
 SILLY STUFF:
 - makefile syntax (don't forget anything)
-- _.cpp doesn't need #include"_.h" unless a function in .cpp is called
-before having been defined
+- _.cpp doesn't need #include"_.h" unless a function in .cpp is called before having been defined
+- 
