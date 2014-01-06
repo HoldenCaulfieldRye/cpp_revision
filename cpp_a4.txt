@@ -50,3 +50,9 @@ string
   #include<string>
     append_char
       void push_back(char ch);
+
+
+SILLY STUFF:
+- makefile syntax (don't forget anything)
+- _.cpp doesn't need #include"_.h" unless a function in .cpp is called
+before having been defined
