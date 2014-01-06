@@ -2,6 +2,12 @@ cstring:
   to clear: charray[0] = '\0';
   const char* always has a sentinel character
 
+strstr:
+  #include no need
+    char* strstr(char* str, const char* target);
+    const char* strstr(const char* str, const char* target);
+    //returns *p to 1st occurrence in str1 of str2, else null *p
+
 getline:
   #include<istream> or #include<fstream>
     istream.getline(char*, int size)
@@ -35,12 +41,6 @@ strncmp:
     int strncmp(const char*, const char*, int n);
     //strcmp() on first n characters of both strings
     //C doesn't support overloading
-
-strstr:
-  #include no need
-    char* strstr(char* str, const char* target);
-    const char* strstr(const char* str, const char* target);
-    //returns pointer to 1st occurrence in str1 of str2, else null pointer
 
 vector:
   #include<vector>
