@@ -1,3 +1,5 @@
+M-x column-number-mode
+
 cstring:
   to clear: charray[0] = '\0';
   const char* always has a sentinel character
@@ -26,7 +28,7 @@ strcpy:
 
 strcat:
   #include<cstring>
-    char* strcat(char* dest, const char* source)
+    char* strcat(char* dest, const char* source);
 
 strcmp:
   #include<cstring>
