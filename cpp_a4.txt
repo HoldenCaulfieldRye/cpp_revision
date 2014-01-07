@@ -66,6 +66,12 @@ const char* const is a constant pointer to a const char
 
 
 SILLY STUFF:
+- read whole paper before beginning please!! there are sometimes
+  much easier questions down the line
 - makefile syntax (don't forget anything)
-- _.cpp doesn't need #include"_.h" unless a function in .cpp is called before having been defined
-- 
+- _.cpp doesn't need #include"_.h" unless a function in .cpp is
+  called before having been defined
+- palindrome q1 took you 15 mins, because you're not commenting
+  as you code where you might be writing a mistake
+
+

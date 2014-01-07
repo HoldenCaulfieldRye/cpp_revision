@@ -99,6 +99,11 @@ strcpy:
 
 - find "getline" in wjk lecture 6 and read
 - write a program that deletes every repeated character from a string, but write pseudo code on paper first! this one's a killer
+- const char* is a pointer to a const char
+  char const* is a pointer to a char const
+     const char and char const are the same thing, so the pointers are same too
+  however, char* const is a constant pointer to a char
+           const char* const is a constant pointer to a const char
 
 
 getline
