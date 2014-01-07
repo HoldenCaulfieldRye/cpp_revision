@@ -42,13 +42,17 @@ int main() {
 
   cout << "====================== Question 3 ======================" << endl << endl;
 
+  cout << "I N T E R M E Z Z O" << endl;
+  print("1234", "abcdefghijklmnopqrstuvwxyz", cout);
+  cout << endl;
+
   print_braille("Hello!", cout);
 
   cout << endl;
 
-  // print_braille("S-Club7?", cout);
+  print_braille("S-Club7?", cout);
 
-  // cout << endl;
+  cout << endl;
 
   return 0;
 }

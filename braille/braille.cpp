@@ -139,91 +139,52 @@ void encode(const char* str, char* braille) {
 
 
 void print_braille(const char* str, ostream& out) {
-  char braille[100], matrix[600][4];
+  char braille[100];
 
   //create encoded text
   encode(str, braille);
 
-  cerr << "braille: " << braille << endl;
-
-  //write out braille in appropriate format in matrix, encoded char by encoded char
-  matrify(str, braille, &matrix[0]);
-
 
   //print matrix to out
-  for (int col=0; matrix[0][col]!='\0'; col++) {
-    for (int row=0; row<4; row++)
-      out << matrix[row][col];
-    out << endl;
-  }
+  print(str, braille, out);
 
   return;
 }
 
 
-void matrify(const char* str, char* braille, char m[][600]) {
-  int count=0;
+void print(const char* str, const char* braille, ostream& out) {
+  int temp;
 
-  if (str[0]=='\0') {
-    m[0][0] = '\0';   //sentinel character to mark last column
-    return;  
-  }
+  //print top 3 lines
+  for(int index=0; index<3; index++) {
+    temp = index;
+    for (int i=0; str[i]!='\0' && i<20; i++) {
+      out << braille[index] << braille[index+3] << ' ';
+      index+=6;
 
-  if (isupper(str[0])) {
-
-    cerr << endl << "isupper true" << endl;
-
-    for (int col=0; col<6; col++) {
-      for (int row=0; row<3; row++) {
-	if((col+1)%3==0)
-	  m[row][col] = ' '; //insert blank column
-	else {
-
-	  cerr << "m[" << row << "][" << col << "] = " << "braille[" << count << "] = " << braille[count] << endl;
-
-	  m[row][col] = braille[count];
-	  count++;
-	}
+      if(isupper(str[i])) {
+	out << braille[index] << braille[index+3] << ' ';
+	index+=6;
       }
     }
-
-    cerr << endl << "m[3][3] = " << str[0] << endl;
-
-    m[3][3] = str[0];
-    return matrify(&str[1], &braille[12], &m[][6]); 
-    /*    return matrify(&str[1], &braille[12], &m[6]); 
-&m[6] is wrong, because in matrify() declaration, you say your 3rd param is m[][600], an array of 600-character rows. but with &m[6] you are calling the 6th row, and you have no guarantee that it exists. 
-in fact, you're only ever writing data to the first 3 rows!
-what you really want to call, in this specific case, is &m[][6], ie the address of the 6th column in your current argument. But you can't do that; you can only call the address of the k-th entry of your array, in this case the k-th row of your matrix.
-C++ won't let you have m[4][] as a parameter.
-The solution is to have m[][4] as a parameter, and print the transpose of this function.
-     */
+    index = temp;
+    out << endl;
   }
 
-  else {
-
-    cerr << endl << "isupper false" << endl;
-
-    for (int col=0; col<3; col++) {
-      for (int row=0; row<3; row++) {
-	if((col+1)%3==0)
-	  m[row][col] = ' '; //insert blank column
-	else {
-
-	  cerr << "m[" << row << "][" << col << "] = " << "braille[" << count << "] = " << braille[count] << endl;
-
-	  m[row][col] = braille[count];
-	  count++;
-	}
-      }
-    }
-
-    cerr << endl << "m[3][0] = " << str[0] << endl;
-
-    m[3][0] = str[0];
-
-    cerr << "neither m[3][0] nor str[0] are segfaulting" << endl;
-
-    return matrify(&str[1], &braille[6], &m[][3]);      
+  //print 4th line
+  for (int i=0; str[i]!='\0' && i<30; i++) {
+    if(isupper(str[i]))
+      out << "   ";
+    out << str[i] << "  ";
   }
+
+  out << endl;
 }
+
+/*    return matrify(&str[1], &braille[12], &m[6]); 
+      &m[6] is wrong, because in matrify() declaration, you say your 3rd param is m[][600], an array of 600-character rows. but with &m[6] you are calling the 6th row, and you have no guarantee that it exists. 
+      in fact, you're only ever writing data to the first 3 rows!
+      what you really want to call, in this specific case, is &m[][6], ie the address of the 6th column in your current argument. But you can't do that; you can only call the address of the k-th entry of your array, in this case the k-th row of your matrix.
+      C++ won't let you have m[4][] as a parameter.
+      The solution is to have m[][4] as a parameter, and print the transpose of this function.
+*/
