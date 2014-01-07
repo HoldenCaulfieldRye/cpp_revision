@@ -140,27 +140,29 @@ void encode(const char* str, char* braille) {
 
 void print_braille(const char* str, ostream& out) {
   char braille[100], matrix[4][600];
-  char *mat = &matrix[0][0];
-  char **m = &mat;
 
   //create encoded text
   encode(str, braille);
 
+  cerr << "braille: " << braille << endl;
+
   //write out braille in appropriate format in matrix, encoded char by encoded char
-  matrify(str, braille, mat, m);
+  matrify(str, braille, &matrix[0]);
+
 
   //print matrix to out
   for (int row=0; row<4; row++) {
     for (int col=0; matrix[0][col]!='\0'; col++)
       out << matrix[row][col];
+    out << endl;
   }
 
   return;
 }
 
 
-void matrify(const char* str,  char* braille, char* mat, char** m) {
-  int count=0, col=0;
+void matrify(const char* str, char* braille, char m[][600]) {
+  int count=0;
 
   if (str[0]=='\0') {
     m[0][0] = '\0';   //sentinel character to mark last column
@@ -169,46 +171,58 @@ void matrify(const char* str,  char* braille, char* mat, char** m) {
 
   if (isupper(str[0])) {
 
-    cerr << "isupper true" << endl;
+    cerr << endl << "isupper true" << endl;
 
-    for (col=0; col<6; col++) {
+    for (int col=0; col<6; col++) {
       for (int row=0; row<3; row++) {
+	if((col+1)%3==0)
+	  m[row][col] = ' '; //insert blank column
+	else {
 
-	cerr << endl << "m[" << row << "][" << col << "] = " << braille[count] << endl;
+	  cerr << "m[" << row << "][" << col << "] = " << "braille[" << count << "] = " << braille[count] << endl;
 
-	m[row][col] = braille[count];
-	count++;
+	  m[row][col] = braille[count];
+	  count++;
+	}
       }
     }
 
-    cerr << endl << "m[3][" << col << "] = " << str[0] << endl;
+    cerr << endl << "m[3][3] = " << str[0] << endl;
 
-    m[3][col] = str[0];
-    mat = &m[0][6];
-    m = &mat;
-    return matrify(&str[1], &braille[12], mat, m); //is  &m[][k] going to work?
+    m[3][3] = str[0];
+
+    /*    return matrify(&str[1], &braille[12], &m[6]); 
+&m[6] is wrong, because in matrify() declaration, you say your 3rd param is m[][600], an array of 600-character rows. but with &m[6] you are calling the 6th row, and you have no guarantee that it exists. 
+in fact, you're only ever writing data to the first 3 rows!
+what you really want to call, in this specific case, is &m[][6], ie the 6th column in your current argument. 
+and I think your parameter needs to change to m[4][], which basically forces the compiler to ensure that you will never run out of columns.
+     */
   }
 
   else {
 
-    cerr << "isupper false" << endl;
+    cerr << endl << "isupper false" << endl;
 
-    for (col=0; col<3; col++) {
+    for (int col=0; col<3; col++) {
       for (int row=0; row<3; row++) {
+	if((col+1)%3==0)
+	  m[row][col] = ' '; //insert blank column
+	else {
 
-	cerr << endl << "m[" << row << "][" << col << "] = " << braille[count] << endl;
+	  cerr << "m[" << row << "][" << col << "] = " << "braille[" << count << "] = " << braille[count] << endl;
 
-	m[row][col] = braille[count];
-	count++;
+	  m[row][col] = braille[count];
+	  count++;
+	}
       }
     }
 
-    cerr << endl << "m[0][" << col << "] = " << str[0] << endl;
+    cerr << endl << "m[3][0] = " << str[0] << endl;
 
-    m[0][col] = str[0];
-    mat = &m[0][3];
-    m = &mat;
+    m[3][0] = str[0];
 
-    return matrify(&str[1], &braille[6], mat, m);      
+    cerr << "neither m[3][0] nor str[0] are segfaulting" << endl;
+
+    return matrify(&str[1], &braille[6], &m[3]);      
   }
 }

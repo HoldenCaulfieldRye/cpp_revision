@@ -4,4 +4,4 @@ void encode(const char* str, char* braille);
 
 void print_braille(const char* str, ostream& out);
 
-void matrify(const char* str,  char* braille, char* mat, char** m);
+void matrify(const char* str, char* braille, char matrix[][600]);

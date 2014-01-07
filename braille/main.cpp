@@ -46,9 +46,9 @@ int main() {
 
   cout << endl;
 
-  print_braille("S-Club7?", cout);
+  // print_braille("S-Club7?", cout);
 
-  cout << endl;
+  // cout << endl;
 
   return 0;
 }
