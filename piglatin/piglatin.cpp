@@ -101,11 +101,16 @@ void translateStream(istream& input, ostream& output) {
 
     //does word contain punctuation at end?
     for(end=0; word[end]!='\0'; end++);
+
+    //cerr << endl << "checking whether " << word[end-1] << " is punct" << endl;
+
     if (ispunct(word[end-1])) {
       punct = true;
       last = word[end-1];
       word[end-1]='\0';
     }
+
+    //cerr << "\t(translateStream) about to translate word: " << word << endl;
 
     translateWord(word, translated);
 
@@ -122,3 +127,6 @@ void translateStream(istream& input, ostream& output) {
     return;
   }
 }
+
+
+

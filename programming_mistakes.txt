@@ -1,5 +1,3 @@
-FIND OUT WHAT DIFFERENCE BETW CONST CHAR* AND CHAR CONST* IS
-
 Programming mistakes
 
 Find past papers on Cate

@@ -44,9 +44,18 @@ int main() {
   cout << "In Pig Latin 'Yellow' is '" << translated << "'." << endl;
   cout << endl;
 
+
+  translateWord("banana!", translated);
+  cout << "In Pig Latin 'banana!' is '" << translated << "'." << endl;
+  cout << endl;
+
+
   /* QUESTION 3 */
   
   cout << "====================== Question 3 ======================" << endl;
+
+  cout << "'!' counts as punct: " << ispunct('!') << endl;
+  cout << "',' counts as punct: " << ispunct(',') << endl;
 
   cout << "The file 'fruit.txt' translated into Pig Latin is:" << endl << endl;
   ifstream input;
