@@ -1,6 +1,8 @@
 M-x column-number-mode
 M-x customize-face
 C-x m <function>                  REMEMBER THIS ONE!!!
+C-_                               wide undo
+C-g C-_                           wide redo
 
 cstring:
   to clear: charray[0] = '\0';
