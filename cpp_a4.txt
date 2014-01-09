@@ -1,16 +1,20 @@
 M-x column-number-mode
 M-x customize-face
-C-x m <function>                  REMEMBER THIS ONE!!!
+C-x m <function>                  REMEMBER!
 
 cstring:
   to clear: charray[0] = '\0';
   const char* always has a sentinel character
 
-strstr:
+strstr:                          REMEMBER!
   #include no need
     char* strstr(char* str, const char* target);
     const char* strstr(const char* str, const char* target);
     //returns *p to 1st occurrence in str1 of str2, else null *p
+
+strlen:                          REMEMBER!
+  #include<cstring>
+    int strlen(const char*);
 
 getline:
   #include<istream> or #include<fstream>
@@ -45,6 +49,28 @@ strncmp:
     int strncmp(const char*, const char*, int n);
     //strcmp() on first n characters of both strings
     //C doesn't support overloading
+
+isdigit:
+  #include<cctype>
+    int isdigit(char);
+    //returns 0 if not digit
+    //returns a value if digit
+
+itoa:
+  #include<cstdlib>
+    char* itoa(int value, char* str, int base);
+    //integer to string
+    //returns str - same as 2nd parameter
+    //str is null terminated
+
+atoi:
+  #include<cstdlib>
+    int atoi(const char* str);
+    //string to integer
+    //discards whitespace until digit met
+    //atoi("  -23")   = -23
+    //atoi("  4  3")  = 4
+    //atoi("  7  -3") = 7
 
 vector:
   #include<vector>
