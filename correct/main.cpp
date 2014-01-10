@@ -1,6 +1,9 @@
 #include<iostream>
 #include<cstring>
 #include<cstdlib>
+#include<sstream>
+#include<string>
+#include<boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -38,20 +41,73 @@ int main() {
   cout << "010000010111001001110100 decoded as text is '" << text << "'" << 
 endl << endl;
 
-  cout << "====================== Question 2 ======================" << endl << endl;
+  cout << "====================== Question * ======================" << endl << endl;
 
   cerr << "atoi('  73') = " << atoi("  73") << endl;
   cerr << "atoi('  -23') = " << atoi("  -23") << endl;
   cerr << "atoi('  4  3') = " << atoi("  4  3") << endl;
   cerr << "atoi('  7  -3') = " << atoi("  7  -3") << endl;
 
-  char st[20];
-  int value = 234;
-  itoa(value, st, 10);
-
+  //testing itoa
+  string st;
+  // int value = 234;
+  // //st = itoa(value);
+  // //p = itoa(value);
   // cerr << "itoa(234, st, 10) = " << itoa(234, st, 10) << endl;
   // cerr << "itoa(-234, st, 10) = " << itoa(234, st, 10) << endl;
   // cerr << "itoa(value, st, 10) = " << itoa(value, st, 10) << endl;
+
+  //testing sstream with c++ strings
+  stringstream ss;
+  ss << 7*8;
+  st = ss.str();
+  cerr << "string st = ss.str() = " << st << endl;
+  //p = ss.str();
+
+  //testing stoi, which can only work on c++ strings
+  //cerr << "stoi('   -23') = " << stoi("   -23", NULL, 10) << endl;
+  //const char* s = "   92  ";
+  //cerr << "stoi(constchar* '   92  ') = " << stoi(s, NULL, 10) << endl;
+  // string s2 = "    -90 ";
+  // stoi(s2, NULL, 10);
+  //cerr << "stoi(string '   -90 ') = " << stoi(s2, NULL, 10) << endl;
+
+  //testing to_string(), which can only work on c++ strings
+  //cerr << "to_string(34) = " << to_string(34) << endl;
+  //st = to_string(-21);
+  //string s4 = to_string(-112);
+
+  //test lexical_cast() from boost?
+  //one nondigit int
+  int lint = 237;
+  string str = boost::lexical_cast<string>(lint); //boost:: crucial
+  const char* const_cstr = str.c_str(); //const required
+  char cstr[10];            //no need if const fine
+  strcpy(cstr, const_cstr); //no need if const fine
+  cerr << "lexical_cast<string> etc: " << cstr << endl;
+
+  // char* p = boost::lexical_cast<char*>(a);
+  // cerr << "char* p = boost::lexical_cast<char*>(a) = " << p << endl;
+  //const char* cp = boost::lexical_cast<const char*>(a);
+
+
+  //char arithmetic with +-'0'
+  //one digit
+  int digit = 6;
+  char cdigit = digit + '0';
+  cerr << "cdigit: " << cdigit << endl;
+    
+  //array of digits
+  const int length = 5;
+  int digits[length] = {0,1,2,3,4};
+  char cdigits[length+1];
+  for(int i=0; i<length; i++)
+    cdigits[i] = digits[i] + '0';
+  cdigits[length] = '\0';
+
+  cerr << "cdigits: " << cdigits << endl;
+
+  cout << "====================== Question 2 ======================" << endl << endl;
 
   char correct[512]; 
   add_error_correction("0100", correct);
