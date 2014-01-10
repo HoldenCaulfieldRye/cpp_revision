@@ -48,50 +48,95 @@ void binary_to_text(const char* binary, char* str) {
   char temp[512];
   strcpy(temp, binary);
   temp[8]='\0';
+
   str[0] = binary_to_ascii(temp);
+
+  // //cerr << temp << " to text is " << str[0] << endl;
+
   binary_to_text(&binary[8], &str[1]);
 }
 
 
 /*insert check bits*/
-void add_error_correction(const char* data, char* corrected) {
-  int checkBit[3];
-  // numdata[512];
+void add_error_correction(const char* data, char* correct) {
 
-  // for(int i=0; data[i]!='\0'; i++) {
-  //   if (data[i]=='0')
-  // 	 numdata[i] = 0;
-  //   else numdata[i] = 1;
-  // }
+  if(data[0]=='\0') {
+    correct[0] = '\0';
+    return;
+  }
 
-  //  cerr << "numdata[0] + numdata[1] + numdata[3] = " << numdata[0] + numdata[1] + numdata[3] << endl;
+  char checkBits[3];
 
-  checkBit[0] = (isdigit(data[0]) + isdigit(data[1]) + isdigit(data[3])) % 2;
-  checkBit[1] = (isdigit(data[0]) + isdigit(data[2]) + isdigit(data[3])) % 2;
-  checkBit[2] = (isdigit(data[1]) + isdigit(data[2]) + isdigit(data[3])) % 2;
+  checkBits[0] = ((data[0] + data[1] + data[3]) % 2) + '0';
+  checkBits[1] = ((data[0] + data[2] + data[3]) % 2) + '0';
+  checkBits[2] = ((data[1] + data[2] + data[3]) % 2) + '0';
 
-  checkBit[3]='\0';
+  //cerr << "checkbits: " << checkBits //add sentinel for this!
 
-  cerr << "checkbits:";
-  for(int i=0; i<3; i++)
-    cerr << checkBit[i];
-  cerr << endl;
+  correct[0] = checkBits[0];
+  correct[1] = checkBits[1]; 
+  correct[2] = data[0];
+  correct[3] = checkBits[2]; 
+  correct[4] = data[1]; 
+  correct[5] = data[2]; 
+  correct[6] = data[3];
 
-  corrected[0] = (char) checkBit[0];
-  corrected[1] = (char) checkBit[1];
-  corrected[2] = data[0];
-  corrected[3] = (char) checkBit[2];
-  corrected[4] = data[1];
-  corrected[5] = data[2];
-  corrected[6] = data[3];
-
-  corrected[7] = '\0';
+  add_error_correction(&data[4], &correct[7]);
 }
 
 
 
 int decode(const char* received, char* decoded) {
-  return -1;
+
+  if (received[0]=='\0') {
+    decoded[0] = '\0';
+    return 0;
+  }
+
+  int p[3];
+
+  decoded[0] = received[2];
+  decoded[1] = received[4];
+  decoded[2] = received[5];
+  decoded[3] = received[6];
+
+  p[0] = (received[3] + received[4] + received[5] + received[6]) % 2;
+  p[1] = (received[1] + received[2] + received[5] + received[6]) % 2;
+  p[2] = (received[0] + received[2] + received[4] + received[6]) % 2;
+
+  //cerr << "parities: " << p[0] << p[1] << p[2] << endl;
+
+  if (p[0] + p[1] + p[2] == 0)  {//ie p[0]==p[1]==p[2]==0 
+    //cerr << "no error" << endl;
+    return decode(&received[7], &decoded[4]);
+  }
+
+  int errorPos = p[0]*4 + p[1]*2 + p[2] - 1; //reach here iif a bit error exists
+
+  //cerr << "there is an error at position " << errorPos << endl;
+   //cerr << "entry no " << errorPos << " was " << (char) received[errorPos] << endl;
+
+  /*only really need to flip bit if data*/
+   switch(errorPos) {
+   case 2:
+     decoded[0] = ((decoded[0] + 1) % 2) + '0'; 
+     //cerr << "it is now " << (char) decoded[0] << endl;
+     break;
+   case 4:
+     decoded[1] = ((decoded[1] + 1) % 2) + '0';
+     //cerr << "it is now " << (char) decoded[1] << endl; 
+     break;
+   case 5:
+     decoded[2] = ((decoded[2] + 1) % 2) + '0';
+     //cerr << "it is now " << (char) decoded[2] << endl; 
+     break;
+   case 6:
+     decoded[3] = ((decoded[3] + 1) % 2) + '0';
+     //cerr << "it is now " << (char) decoded[3] << endl; 
+     break;
+   }
+
+  return 1 + decode(&received[7], &decoded[4]);
 }
 
 

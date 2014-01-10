@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cstring>
 #include<cstdlib>
+#include<cstdio>
 #include<sstream>
 #include<string>
 #include<boost/lexical_cast.hpp>
@@ -49,15 +50,16 @@ endl << endl;
   cerr << "atoi('  7  -3') = " << atoi("  7  -3") << endl;
 
   //testing itoa
-  string st;
+  // char array[10];
   // int value = 234;
-  // //st = itoa(value);
-  // //p = itoa(value);
-  // cerr << "itoa(234, st, 10) = " << itoa(234, st, 10) << endl;
-  // cerr << "itoa(-234, st, 10) = " << itoa(234, st, 10) << endl;
-  // cerr << "itoa(value, st, 10) = " << itoa(value, st, 10) << endl;
+  // array = itoa(value);
+  // cerr << "array = itoa(value); array: " << array << endl;
+  // itoa(234, array, 10);
+  // cerr << "itoa(234, array, 10); array: " << array << endl;
+  // cerr << "itoa(234, array, 10) = " << itoa(234, array, 10) << endl;
 
   //testing sstream with c++ strings
+  string st;
   stringstream ss;
   ss << 7*8;
   st = ss.str();

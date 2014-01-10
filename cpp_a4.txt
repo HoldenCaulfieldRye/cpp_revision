@@ -71,8 +71,7 @@ itoa:
   not with the lab compilers
   integer to string
   if handling digits only, use char arithmetic with +-'0'
-  if handling larger ints, use lexical_cast or
-     	      	     	   create recursive /10 helper function
+  if handling larger ints, create recursive /10 helper function
   
   +-'0'
     //one digit
@@ -88,16 +87,11 @@ itoa:
     cdigits[length] = '\0';
 
   lexical_cast
-    //one nondigit int
-    #include<string>
-    #include<boost/lexical_cast.hpp>
-    int lint = 237;
-    string str = boost::lexical_cast<string>(lint); //boost:: crucial
-    const char* const_cstr = str.c_str(); //const required
-    char cstr[10];            //no need if const fine
-    strcpy(cstr, const_cstr); //no need if const fine
+    boost library not allowed
 
-
+  recursive /10 helper function
+    ...
+    ...
 
 vector:
   #include<vector>
