@@ -21,9 +21,9 @@ const char* find_path(char** maze, int height, int width, char start, char finis
 
 bool recursive(char** maze, char pos, int row, int column, char* path, int path_length, char start, char finish, int height, int width);
 
-const char* free_directions(char** maze, int row, int column, int height, int width);
+const char* free_directions(char** maze, int row, int column, int height, int width, char start, char finish);
 
-bool isValid(char** maze, int row, int column, int height, int width);
+bool isValid(char** maze, int row, int column, int height, int width, char start, char finish);
 
 char previous(char* path, int path_length);
 

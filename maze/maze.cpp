@@ -33,11 +33,21 @@ void deallocate_2D_array(char **m, int rows) {
 bool get_maze_dimensions(const char *filename, int &height, int &width) {
   char line[512];
   
-  ifstream input(filename);
+  // ifstream input(filename);
+  ifstream input;
+  input.open(filename);
+
+  if (input.fail()) {
+    cerr << "couldn't open file" << endl;
+    return false;
+  }
 
   height = width = 0;
 
   input.getline(line,512);  
+
+  cerr << "succeeded in extracting data from file" << endl;
+
   while (input) {
     if ( (int) strlen(line) > width)
       width = strlen(line);
@@ -45,18 +55,28 @@ bool get_maze_dimensions(const char *filename, int &height, int &width) {
     input.getline(line,512);  
   }
 
-  if (height > 0)
+  cerr << "dimensions: " << height << ", " << width << endl;
+
+  if (height > 0) {
+    cerr << "(get_maze_dimensions) all good, about to return true" << endl;
     return true;
+  }
   return false;
 }
 
 /* pre-supplied function to load a maze from a file*/
 char **load_maze(const char *filename, int &height, int &width) {
 
+  cerr << "starting load maze" << endl;
+
   bool success = get_maze_dimensions(filename, height, width);
+
+  cerr << "dimensions of this maze: " << height << ", " << width << endl;
   
-  if (!success)
+  if (!success) {
+    cerr << "couldn't get hold of this maze's dimensions!" << endl;
     return NULL;
+  }
 
   char **m = allocate_2D_array(height, width);
   
@@ -68,7 +88,9 @@ char **load_maze(const char *filename, int &height, int &width) {
     input.getline(line, 512);
     strcpy(m[r], line);
   }
-  
+
+  input.close();  
+
   return m;
 }
 
@@ -195,6 +217,9 @@ const char* find_path(char** maze, int height, int width, char start, char finis
 
 bool recursive(char** maze, char pos, int row, int column, char* path, int path_length, char start, char finish, int height, int width) {
 
+  // cout << "The path is shown below: " << endl;
+  // print_maze(maze, height, width);
+
   //base case: has end been met
   if(pos == finish) {
     path[path_length] = '\0';
@@ -203,29 +228,32 @@ bool recursive(char** maze, char pos, int row, int column, char* path, int path_
 
   //are there any free directions
   char freeDir[4];
-  strcpy(freeDir, free_directions(maze, row, column, height, width));
+  strcpy(freeDir, free_directions(maze, row, column, height, width, start, finish));
 
   if (strcmp(freeDir,"")==0) {
 
+  //   cerr << "no free directions:";
+  // print_maze(maze, height, width);
+
     if(pos == start || strcmp(path, "")==0) {
-      cerr << "\nI've tried everything, nothing works. there's no solution to this maze" << endl;
+     //cerr << "\nI've tried everything, nothing works. there's no solution to this maze" << endl;
       return false;
     }
 
     //dont go here
-    maze[row][column] = '/';
-    cerr << "figured that shouldn't go to maze[" << row << "][" << column << "]" << " so direction " << path[path_length-1] << " is no good" << endl;
+    maze[row][column] = '.';
+   //cerr << "figured that shouldn't go to maze[" << row << "][" << column << "]" << " so direction " << path[path_length-1] << " is no good" << endl;
 
     //go back one step
-    cerr << "going back one step in direction " << opposite(path[path_length-1]) << " from maze[" << row << "][" << column << "]  to ";
+   //cerr << "going back one step in direction " << opposite(path[path_length-1]) << " from maze[" << row << "][" << column << "]  to ";
     pos = next_pos(row, column, opposite(path[path_length-1]), maze, height, width);
-    cerr << "maze[" << row << "][" << column << "]" << endl;
+   //cerr << "maze[" << row << "][" << column << "]" << endl;
 
     //edit path
-    cerr << "shrinking path" << endl;
+   //cerr << "shrinking path" << endl;
     path[path_length-1] = '\0';
     path_length--;
-    cerr << "path is now " << path << endl;
+   //cerr << "path is now " << path << endl;
 
     return recursive(maze, pos, row, column, path, path_length, start, finish, height, width);
   }
@@ -233,41 +261,42 @@ bool recursive(char** maze, char pos, int row, int column, char* path, int path_
   //reach here iif pos is a valid position to be in
 
   //place mark
-  cerr << "being at maze[" << row << "][" << column << "]" << " seems fine; placing '#'" << endl;
+ //cerr << "being at maze[" << row << "][" << column << "]" << " seems fine; placing '#'" << endl;
+  if (maze[row][column]==' ')
   maze[row][column] = '#';
 
   //take first free direction
-  cerr << "going forward in direction " << opposite(path[path_length-1]) << " from maze[" << row << "][" << column << "]  to ";
+ //cerr << "going forward in direction " << opposite(path[path_length-1]) << " from maze[" << row << "][" << column << "]  to ";
   pos = next_pos(row, column, freeDir[0], maze, height, width);
-  cerr << "maze[" << row << "][" << column << "]" << endl;
+ //cerr << "maze[" << row << "][" << column << "]" << endl;
 
   //edit path
-  cerr << "increasing path" << endl;
+ //cerr << "increasing path" << endl;
   path[path_length] = freeDir[0];
   path_length++;
-  cerr << "path is now" << path << endl;
+ //cerr << "path is now" << path << endl;
 
   return recursive(maze, pos, row, column, path, path_length, start, finish, height, width);
 }
 
 
-const char* free_directions(char** maze, int row, int column, int height, int width) {
+const char* free_directions(char** maze, int row, int column, int height, int width, char start, char finish) {
   char freeDir[4];
   strcpy(freeDir, "");
 
-  if (isValid(maze, row-1, column, height, width))
+  if (isValid(maze, row-1, column, height, width, start, finish))
     strcat(freeDir, "N");
 
-  if (isValid(maze,row+1,column, height, width))
+  if (isValid(maze,row+1,column, height, width, start, finish))
     strcat(freeDir, "S");
 
-  if (isValid(maze,row,column-1, height, width))
+  if (isValid(maze,row,column-1, height, width, start, finish))
     strcat(freeDir, "W");
 
-  if (isValid(maze,row,column+1, height, width))
+  if (isValid(maze,row,column+1, height, width, start, finish))
     strcat(freeDir, "E");
 
-  cerr << "free_directions at maze[" << row << "][" << column << "] are: " << freeDir << endl;
+ //cerr << "free_directions at maze[" << row << "][" << column << "] are: " << freeDir << endl;
 
   return freeDir;
 }
@@ -275,8 +304,8 @@ const char* free_directions(char** maze, int row, int column, int height, int wi
 
 /* positions marked by '/' are not valid so they won't be visited again (although technically,
 it is legal to go onto them)*/
-bool isValid(char** maze, int row, int column, int height, int width) {
-  if ((maze[row][column]==' ' || maze[row][column]=='X') && !(row >= height || row < 0 || column >= width || column < 0))
+bool isValid(char** maze, int row, int column, int height, int width, char start, char finish) {
+  if ((maze[row][column]==' ' || maze[row][column]==finish || maze[row][column]==start) && !(row >= height || row < 0 || column >= width || column < 0))
     return true;
   return false;
 }
