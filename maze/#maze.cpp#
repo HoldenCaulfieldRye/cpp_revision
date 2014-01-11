@@ -177,7 +177,8 @@ char next_pos(int& row, int& column, char direction, char** maze, int height, in
 
 const char* find_path(char** maze, int height, int width, char start, char finish) { //return char*?
   int row=0, column=0;
-  char path[100], pos;
+  char *path = new char[100];
+  char pos;
 
   //initialise
   find_marker(start, maze, height, width, row, column);

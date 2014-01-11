@@ -89,9 +89,7 @@ itoa:
   lexical_cast
     boost library not allowed
 
-  recursive /10 helper function
-    ...
-    ...
+  see what McCormac proposes!
 
 vector:
   #include<vector>
@@ -106,17 +104,49 @@ vector:
     //returns VecIt pointing to element found
 
 
-
 carrays:
 const char* is same as char const*
 char* const is a constant pointer to a char
 const char* const is a constant pointer to a const char
 
 
+2D arrays, load map:
+  char **allocate_2D_array(int rows, int columns) {
+    char **m = new char *[rows];
+    assert(m);
+    for (int r=0; r<rows; r++) {
+      m[r] = new char[columns];
+      assert(m[r]);
+    }
+    return m;
+  }
+
+  void deallocate_2D_array(char **m, int rows) {
+    for (int r=0; r<rows; r++)
+      delete [] m[r];
+    delete [] m;
+  }
+
+char **load_maze(const char *filename, int &height, int &width) {
+  bool success = get_maze_dimensions(filename, height, width);
+  if (!success)
+    return NULL;
+  char **m = allocate_2D_array(height, width);
+  ifstream input(filename);
+  char line[512];
+  for (int r = 0; r<height; r++) {
+    input.getline(line, 512);
+    strcpy(m[r], line);
+  }
+  return m;
+}
+
+
 SILLY STUFF:
 - read whole paper before beginning please!! there are sometimes
   much easier questions down the line
 - ostreams and istreams as args must be called by ref 
+- only way to return cstring is with dynamic arrays
 - makefile syntax (don't forget anything)
 - _.cpp doesn't need #include"_.h" unless a function in .cpp is
   called before having been defined
