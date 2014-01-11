@@ -52,26 +52,26 @@ int main() {
     cout << "NOT ";
   cout << "a solution to the maze" << endl << endl;
 
-  // cout << "====================== Question 3 ======================" << endl << endl;
+  cout << "====================== Question 3 ======================" << endl << endl;
 
-  // /* an easy example with a known solution */
-  // cout << "A path through the maze from '>' to 'X' is: " << endl;
-  // cout << find_path(maze, height, width, '>', 'X') << endl << endl;
+  /* an easy example with a known solution */
+  cout << "A path through the maze from '>' to 'X' is: " << endl;
+  cout << find_path(maze, height, width, '>', 'X') << endl << endl;
 
-  // cout << "The path is shown below: " << endl;
-  // print_maze(maze, height, width);
-  // cout << endl;
+  cout << "The path is shown below: " << endl;
+  print_maze(maze, height, width);
+  cout << endl;
 
-  // deallocate_2D_array(maze, height);
+  deallocate_2D_array(maze, height);
 
-  // /* an impossible example - should return "no solution" */ 
-  // maze = load_maze("simple.txt", height, width);
-  // assert(maze);
+  /* an impossible example - should return "no solution" */ 
+  maze = load_maze("simple.txt", height, width);
+  assert(maze);
 
-  // cout << "A path through the maze from '>' to 'U' is: " << endl;
-  // cout << find_path(maze, height, width, '>', 'U') << endl << endl;
+  cout << "A path through the maze from '>' to 'U' is: " << endl;
+  cout << find_path(maze, height, width, '>', 'U') << endl << endl;
 
-  // deallocate_2D_array(maze, height);
+  deallocate_2D_array(maze, height);
   
   // cout << "=================== Bonus Question =====================" << endl << endl;
 

@@ -4,6 +4,11 @@ C-x m <function>                  REMEMBER!
 C-_                               wide undo
 C-g C-_                           wide redo
 
+returning cstring
+  returning a char* defined within f() works but will be overwritten asap
+  so either: return const char*, and strcpy() straight away
+             or dynamically allocate array within f()  
+
 cstring:
   to clear: charray[0] = '\0';
   const char* always has a sentinel character
