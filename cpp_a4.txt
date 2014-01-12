@@ -168,6 +168,13 @@ linked lists:
     char word[MAX_WORD_LENGTH];
     Node *ptr_to_next_node;
   };
+- 'IntPtr &ptr' really important, othw confusion betw '&*' and '*&'
+- never 'Node a_list;', nor 'Nodeptr a_list;', rather 
+  'Nodeptr a_list = NULL;'
+- always call a_node by reference in f(), because want 'previous'
+  to point to modified a_node
+- assign_linked_list(): finish with previous->next = NULL;
+
 
 SILLY STUFF:
 - read whole paper before beginning please!! there are sometimes
@@ -175,11 +182,13 @@ SILLY STUFF:
 - ostreams and istreams as args must be called by ref 
 - only way to return cstring is with dynamic arrays
 - tolower() and toupper() do nothing if not letter
+- 'int *p1 = NULL, *p2 = p1; p1=new int; *p1=1; cout<<p2' segfault
 - makefile syntax (don't forget anything)
 - _.cpp doesn't need #include"_.h" unless a function in .cpp is
   called before having been defined
 - 'using namespace std' must appear before #include"_.h" in any file!
-  otherwise include libraries in header file
+  otherwise include libraries in header file, and include only header
+  in all other files
 - palindrome q1 took you 15 mins, because you're not commenting
   as you code where you might be writing a mistake
 - braille print question humiliated you with hours of work

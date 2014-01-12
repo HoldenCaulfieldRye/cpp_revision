@@ -1,100 +1,141 @@
-/* Program 7.5.1 from C++ Programming Lecture notes  */
+#include"q3.h"
 
-/* Author: Rob Miller and William Knottenbelt
-   Program last changed: 28th September 2013    */
 
-/* This program creates and prints out a linked list of strings. */ 
-
-#include <iostream>
-#include <cstdlib>
-#include <cstring>
-using namespace std;
-
-const int MAX_WORD_LENGTH = 80;
-
-/* definition of a node */
-struct Node;
-typedef Node *Node_ptr;
-
-struct Node
-{
-	char word[MAX_WORD_LENGTH];
-	Node_ptr ptr_to_next_node;
+struct Node {
+  char word[MAX_WORD_LENGTH];
+  Node *next;
 };
 
-/* Function to assign a linked list to "a_node" */
-void assign_list(Node_ptr &a_list);
+
+/* Function to assign a linked list to NULL a_list */
+void assign_list(Node_ptr &a_list) {
+  assign_new_node(a_list);
+  Node_ptr current = a_list, previous;
+  char word[MAX_WORD_LENGTH];
+
+  cout << "enter word ('.' to finish): " << endl;
+  cin.getline(word, MAX_WORD_LENGTH);
+
+  while(strcmp(word, ".")!=0) {
+    strcpy(current->word, word);
+    assign_new_node(current->next);
+    previous = current;
+    current = current->next;
+    cout << "enter word ('.' to finish): " << endl;
+    cin.getline(word, MAX_WORD_LENGTH);
+  }
+  previous->next = NULL;
+  delete current;
+}	
+
 
 /* Function to assign a new dynamic node variable to "a_node" */
-void assign_new_node(Node_ptr &a_node);
+void assign_new_node(Node_ptr &a_node) {
+  a_node = new Node;
+  a_node->next = NULL;
+  strcpy(a_node->word,"*");
+}
+
 
 /* Function to print the strings in the list "a_node" */
-void print_list(Node_ptr a_node);
+void print_list(Node_ptr a_node) {
+  Node_ptr temp = a_node; 
 
-/* MAIN PROGRAM */
-int main()
-{
-	Node_ptr my_list = NULL;
+  while(temp->next!=NULL) {
+    cout << temp->word << " ";
+    temp = temp->next;
+  }
+  cout << temp->word << "." << endl;
 
-	assign_list(my_list);
-
-	cout << "\nTHE LIST IS NOW:\n";
-	print_list(my_list);
-			
-	return 0;
+  temp = NULL;
 }
-/* END OF MAIN PROGRAM */
-	
-/* DEFINITION OF FUNCTION "assign_list" */
-void assign_list(Node_ptr &a_list)
-{
-	Node_ptr current_node, last_node;
-	
-	assign_new_node(a_list);
-	cout << "Enter first word (or '.' to end list): ";
-	cin >> a_list->word;
-	if (!strcmp(".",a_list->word))
-	{
-		delete a_list;
-		a_list = NULL;
-	}
-	current_node = a_list;
-	
-	while (current_node != NULL)
-	{
-		assign_new_node(last_node);
-		cout << "Enter next word (or '.' to end list): ";
-		cin >> last_node->word;
-		if (!strcmp(".",last_node->word))
-		{
-			delete last_node;
-			last_node = NULL;
-		}
-		current_node->ptr_to_next_node = last_node;
-		current_node = last_node;
-	}
-}	
-/* END OF FUNCTION DEFINITION */
 
-/* DEFINITION OF FUNCTION "assign_new_node" */
-void assign_new_node(Node_ptr &a_node)
-{
-        a_node = new (nothrow) Node;
-	if (a_node == NULL) 
-	{
-		cout << "sorry - no more memory\n"; 
-		exit(1);
-	}
-}
-/* END OF FUNCTION DEFINITION */
 
-/* DEFINITION OF FUNCTION "print_list" */
-void print_list(Node_ptr a_node)
-{
-	while (a_node != NULL)
-	{
-		cout << a_node->word << " ";
-		a_node = a_node->ptr_to_next_node;
-	}
+void add_after(Node_ptr &list, const char* a_word, const char* word_after) {
+  if (list == NULL)
+    return;
+
+  if (strcmp(a_word," ")==0) {
+    Node_ptr temp = NULL;
+    assign_new_node(temp);
+    strcpy(temp->word, word_after);
+    temp->next = list;
+    list = temp;
+  }
+
+  Node_ptr current = list, next = NULL;
+
+  while(current != NULL && strcmp(current->word, a_word)!=0)
+    current = current->next;
+
+  if (current==NULL)
+    return;
+
+  if (current->next!=NULL) //reach here iif a_word found
+    next = current->next;
+
+  assign_new_node(current->next);
+  current = current->next;
+  strcpy(current->word, word_after);
+
+  if(next)
+    current->next = next;
+
+  return;
 }
-/* END OF FUNCTION DEFINITION */
+
+void delete_node(Node_ptr &list, char* a_word) {
+  if (list == NULL)
+    return;
+
+  cerr << "comparing " << list->word << " with " << a_word << endl;
+  if (strcmp(list->word, a_word)==0) {
+    list = list->next;
+    return;
+  }
+
+  Node_ptr previous = list;
+
+  while(previous->next != NULL && strcmp((previous->next)->word, a_word)!=0) {
+    previous = previous->next;
+    cerr << "comparing " << (previous->next)->word << " with " << a_word << endl;
+  }
+
+
+  if (strcmp((previous->next)->word, a_word)==0) {
+    if (!(previous->next)->next) {
+      previous->next = NULL;
+      return;
+    }
+    // cerr << "found it" << endl;
+    // cerr << previous->word << " will now be followed by " << ;
+    previous->next = (previous->next)->next;
+  }
+
+  return;
+}
+
+void list_selection_sort(Node_ptr &a_list) {
+
+}
+
+void print_forwards(Node_ptr list) {
+  if (list==NULL)
+    return;
+
+  cout << list->word << " ";
+  list = list->next;
+  print_forwards(list);
+}
+
+
+void print_backwards(Node_ptr list) {
+  if (list==NULL)
+    return;
+
+  Node_ptr next = list->next;
+  print_backwards(next);
+  cout << list->word << " ";
+
+}
+
