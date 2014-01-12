@@ -6,8 +6,7 @@ C-g C-_                           wide redo
 
 returning cstring
   returning a char* defined within f() works but will be overwritten asap
-  so either: return const char*, and strcpy() straight away
-             or dynamically allocate array within f()  
+  so dynamically allocate array within f()  
 
 cstring:
   to clear: charray[0] = '\0';
@@ -17,7 +16,7 @@ strstr:                          REMEMBER!
   #include no need
     char* strstr(char* str, const char* target);
     const char* strstr(const char* str, const char* target);
-    //returns *p to 1st occurrence in str1 of str2, else null *p
+    //returns *p to 1st occurrence in str of target, else null *p
 
 strlen:                          REMEMBER!
   #include<cstring>
@@ -25,8 +24,8 @@ strlen:                          REMEMBER!
 
 getline:
   #include<istream> or #include<fstream>
-    istream.getline(char*, int size)
-    istream.getline(char*, int size, char delim)
+    istream.getline(char*, int size);
+    istream.getline(char*, int size, char delim);
 
 strtok:
   #include<cstring>
@@ -62,6 +61,9 @@ isdigit:
     int isdigit(char);
     //returns 0 if not digit
     //returns a value if digit
+
+typedef:
+  typedef int* iptr;
 
 atoi:
   #include<cstdlib>
@@ -110,9 +112,9 @@ vector:
 
 
 carrays:
-const char* is same as char const*
-char* const is a constant pointer to a char
-const char* const is a constant pointer to a const char
+  const char* is same as char const*
+  char* const is a constant pointer to a char
+  const char* const is a constant pointer to a const char
 
 
 2D arrays, load map:
@@ -132,30 +134,52 @@ const char* const is a constant pointer to a const char
     delete [] m;
   }
 
-char **load_maze(const char *filename, int &height, int &width) {
-  bool success = get_maze_dimensions(filename, height, width);
-  if (!success)
-    return NULL;
-  char **m = allocate_2D_array(height, width);
-  ifstream input(filename);
-  char line[512];
-  for (int r = 0; r<height; r++) {
-    input.getline(line, 512);
-    strcpy(m[r], line);
+  char **load_maze(const char *filename, int &height, int &width) {
+    bool success = get_maze_dimensions(filename, height, width);
+    if (!success)
+      return NULL;
+      char **m = allocate_2D_array(height, width);
+      ifstream input(filename);
+    char line[512];
+    for (int r = 0; r<height; r++) {
+      input.getline(line, 512);
+      strcpy(m[r], line);
+    }
+    return m;
   }
-  return m;
-}
 
+
+pointers:
+  void assign_new_int(IntPtr &ptr) {
+    ptr = new (nothrow) int;
+    if (ptr == NULL) {
+      cout << "Sorry, ran out of memory";
+      exit(1);
+    }
+  }
+
+  can't change size of dynarray. must allocate a new array, copy
+  values, delete original array, change member variable to point
+  to the new array.
+
+
+linked lists:
+  struct Node {
+    char word[MAX_WORD_LENGTH];
+    Node *ptr_to_next_node;
+  };
 
 SILLY STUFF:
 - read whole paper before beginning please!! there are sometimes
   much easier questions down the line
 - ostreams and istreams as args must be called by ref 
 - only way to return cstring is with dynamic arrays
+- tolower() and toupper() do nothing if not letter
 - makefile syntax (don't forget anything)
 - _.cpp doesn't need #include"_.h" unless a function in .cpp is
   called before having been defined
 - 'using namespace std' must appear before #include"_.h" in any file!
+  otherwise include libraries in header file
 - palindrome q1 took you 15 mins, because you're not commenting
   as you code where you might be writing a mistake
 - braille print question humiliated you with hours of work
