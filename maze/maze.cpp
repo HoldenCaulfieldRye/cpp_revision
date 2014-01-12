@@ -122,16 +122,13 @@ bool find_marker(char ch, char** maze, int height, int width, int& row, int& col
 
   // cerr << "ehight = " << height << ", width = " << width << endl;
 
-  for(int i=0; i<width; i++) {
-    for(int j=0; j<height; j++) {
+  for(int row=0; row<width; i++) {
+    for(int column=0; column<height; j++) {
 
       //  cerr << "maze[" << i << "][" << j << "] = " << maze[i][j] << endl;
 
-      if (maze[i][j]==ch) {
-	row = i;
-	column = j;
+      if (maze[row][column] == ch)
 	return true;
-      }
     }
   }
   row = column = -1;
